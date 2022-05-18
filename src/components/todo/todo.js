@@ -43,8 +43,12 @@ const ToDo = () => {
   const firstItem = lastItem - settings.itemsPerPage;
   const filteredList = list.filter(item => settings.showCompleted ? item : !item.complete)
   const itemsInPage = filteredList.slice(firstItem, lastItem);
+
   const changePage = (page) => {
     setCurrentPage(page);
+  }
+  const changeItems = (e) => {
+    settings.updateItemsPerPage(e.target.value);
   }
   return (
     <>
@@ -70,17 +74,27 @@ const ToDo = () => {
           <button type="button" className={settings.showCompleted ? "bp3-button  bp3-intent-success bp3-fill" : "bp3-button  bp3-intent-danger bp3-fill"}
             onClick={settings.updateShow}>{settings.showCompleted ? 'Hide Completed' : 'Show Completed'} </button>
         </label>
-        <br/>
+        <br />
+        <select className="form-select form-select-sm" aria-label="Default select example" onChange={(e) => changeItems(e)}>
+          <option defaultValue value={settings.itemsPerPage}>{settings.itemsPerPage}</option>
+          <option value="2">2</option>
+          <option value="4">4</option>
+          <option value="6">6</option>
+          <option value="8">8</option>
+          <option value="10">10</option>
+          <option value="12">12</option>
+          <option value="14">14</option>
+        </select>
+        <br />
         <h5>To Do List: {incomplete} items pending</h5>
       </form>
 
       <div className="cardsContainer" >
         {itemsInPage.map(item => (
-          <List list={item} toggleComplete={toggleComplete} data='uncompleted' />))}
-        
+          <List list={item} toggleComplete={toggleComplete} deleteItem={deleteItem} />))}
         <br />
         <Pagination itemsPerPage={settings.itemsPerPage} totalItems={filteredList.length}
-        currentPage={currentPage} changePage={changePage} />
+          currentPage={currentPage} changePage={changePage} />
       </div>
     </>
   );
